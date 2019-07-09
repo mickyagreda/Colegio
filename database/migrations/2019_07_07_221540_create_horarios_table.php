@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlumnosTable extends Migration
+class CreateHorariosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateAlumnosTable extends Migration
      */
     public function up()
     {
-        Schema::create('alumnos', function (Blueprint $table) {
+        Schema::create('horarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre', 50);
-            $table->string('apellidos', 50);
-            $table->integer('telefono');
-            $table->integer('ci');
-            $table->boolean('condicion')->default(1);
-           
+            $table->string('dia',60);
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
+            
+            
         });
     }
 
@@ -31,6 +30,6 @@ class CreateAlumnosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alumnos');
+        Schema::dropIfExists('horarios');
     }
 }

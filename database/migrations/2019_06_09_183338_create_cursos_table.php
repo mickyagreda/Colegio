@@ -19,7 +19,7 @@ class CreateCursosTable extends Migration
             $table->string('nombre', 50);
             $table->string('dimension', 256);
             $table->boolean('condicion')->default(1);
-            $table->timestamps();
+            
             $table->foreign('idParalelo')->references('id')->on('paralelos');
         });
     }

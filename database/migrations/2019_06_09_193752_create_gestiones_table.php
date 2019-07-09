@@ -17,7 +17,7 @@ class CreateGestionesTable extends Migration
             $table->increments('id');
             $table->dateTime('año');
             $table->boolean('condicion')->default(1);
-            $table->timestamps();
+           
         });
     }
 

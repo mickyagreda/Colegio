@@ -17,7 +17,7 @@ class CreateParalelosTable extends Migration
             $table->increments('id');
             $table->string('seccion', 50);
             $table->boolean('condicion')->default(1);
-            $table->timestamps();
+           
         });
     }
 

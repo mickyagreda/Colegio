@@ -59,7 +59,7 @@ class ProfesorController extends Controller
                     $extension='png';
                 }
                 $fileName = \str_random().'.'.$extension;
-                $path= 'img/imagenes/profesor'.'/'.$fileName;
+                $path='img/imagenes/profesor'.'/'.$fileName;
                 \file_put_contents($path,$decoded);
                 /*terminando de guardar la superImagen */
                 $profesor->imagen=$fileName;   

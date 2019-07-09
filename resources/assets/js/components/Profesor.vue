@@ -58,12 +58,8 @@
                                     <td v-text="profesor.DNI"></td>
                                     <td v-text="profesor.telefono"></td>
                                     <td v-text="profesor.profesion"></td>
-
-                                    <td>
-                                        <img v-bind:src="`img/imagenes/profesor/${profesor.imagen}`" width="70px" height="70px">
-                                    </td>
-
-                                     <td>
+                                       
+                                       <td>
                                         <div v-if="profesor.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
@@ -72,6 +68,12 @@
                                         </div>
                                         
                                     </td>
+                                    
+                                    <td>
+                                        <img v-bind:src="`img/imagenes/profesor/${profesor.imagen}`" width="70px" height="70px">
+                                    </td>
+
+                                     
                                 </tr>                                
                             </tbody>
                         </table>
