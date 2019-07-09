@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-//use Illuminate\Support\Facades\DB;
 use App\Paralelo;
 
 class ParaleloController extends Controller
@@ -44,9 +42,9 @@ class ParaleloController extends Controller
 
     public function selectParalelo(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $paralelos = Paralelo::where('condicion','=','1')
+        $Paralelos = Paralelo::where('condicion','=','1')
         ->select('id','seccion')->orderBy('seccion', 'asc')->get();
-        return ['paralelos' => $paralelos];
+        return ['paralelos' => $Paralelos];
     }
 
     /**
@@ -58,8 +56,6 @@ class ParaleloController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-
-        $mytime= Carbon::now('America/Lima');
 
         $paralelo = new Paralelo();
         $paralelo->seccion = $request->seccion;

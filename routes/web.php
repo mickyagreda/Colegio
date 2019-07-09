@@ -74,7 +74,7 @@ Route::post('/paralelo/registrar','ParaleloController@store');
 Route::put('/paralelo /actualizar','ParaleloController@update');
 Route::put('/paralelo /desactivar','ParaleloController@desactivar');
 Route::put('/paralelo /activar','ParaleloController@activar');
-
+Route::get('/paralelo/selectParalelo','ParaleloController@selectParalelo');
 
 Route::get('/inscripcion', 'InscripcionController@index');
 Route::post('/inscripcion/registrar', 'InscripcionController@store');
