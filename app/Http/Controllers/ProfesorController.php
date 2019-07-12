@@ -79,7 +79,7 @@ class ProfesorController extends Controller
         $profesor->DNI=$request->DNI;
         $profesor->telefono=$request->telefono;
         $profesor->profesion=$request->profesion;
-        $profesor->condicion='1';
+      
         if( $request->imagen==null){
                 $profesor->imagen=$request->copia;
         }else{
@@ -89,7 +89,7 @@ class ProfesorController extends Controller
                 $decoded=\base64_decode($explode[1]);
                 if(str_contains($explode[0],'jpeg')){
                 $extension='jpg';
-                }else{
+                }else{ 
                 $extension='png';
                 }
                 $fileName = \str_random().'.'.$extension;

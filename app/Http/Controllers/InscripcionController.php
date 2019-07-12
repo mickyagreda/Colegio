@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Inscripcione;
+use Illuminate\Support\Facades\DB;//para trabajar con transacciones
+use App\Inscripcion;
+use App\Curso;
+use App\Gestion;
+use App\CursoGestion;
+use Carbon\Carbon;//para trabajar con fecha
+
 
 class InscripcionController extends Controller
 {
@@ -14,25 +20,24 @@ class InscripcionController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
-        if ($buscar==''){
-                $inscripciones = Inscripcione::join('alumnos','inscripciones.idalumno','=','alumnos.id')
-                ->join('curso_gestiones','inscripciones.idcursogestion','=','curso_gestiones.id')
-                ->join('cursos','curso_gestiones.idcurso','=','cursos.id')
-                ->join('gestiones','curso_gestiones.idgestion','=','gestiones.id')
-                ->select('inscripciones.id','inscripciones.idalumno','cursos.nombre','gestiones.año','alumnos.nombre as alumno','inscripciones.fecha_hora')
-                ->orderBy ('inscripciones.id','desc')->paginate(3);
-        }
-        else{
-            $inscripciones = Inscripcione::join('alumnos','inscripciones.idalumno','=','alumnos.id')
-            ->join('curso_gestiones','inscripciones.idcurso','=','curso_gestiones.id')
-            ->join('cursos','=','curso_gestiones.idcurso','cursos.id')
-            ->join('gestiones','curso_gestiones.idgestion','=','gestiones.id')
-            ->select('inscripciones.id','inscripciones.idalumno','cursos.nombre','gestiones.año','alumnos.nombre as alumno','inscripciones.fecha_hora')
-            ->where('alumnos.nombre','like','%'.$buscar . '%')
-            ->orderBy('inscripciones.id','desc')->paginate(3);
-        }
+        if($buscar==''){
+        $inscripciones = Inscripcion::join('alumnos','inscripciones.idalumno','=','alumnos.id')
+        ->join('curso_gestiones','curso_gestiones.id','=','inscripciones.idcurso')
+        ->join('cursos','curso_gestiones.idcurso','=','cursos.id')
+        ->join('gestiones','curso_gestiones.idgestion','=','gestiones.id')
         
-
+       ->select('inscripciones.id','alumnos.nombre as Nombre Alumno','alumnos.apellidos as Apellidos','curso_gestiones.capacidad as  Capacidad de Alumno','cursos.nombre as  Curso Paralelo','gestiones.año as año Gestion De La Incripcion')
+       ->paginate(5);
+        }
+       else{
+        $inscripciones = Inscripcion::join('alumnos','inscripciones.idalumno','=','alumnos.id')
+        ->join('curso_gestiones','curso_gestiones.id','=','inscripciones.idcurso')
+        ->join('cursos','curso_gestiones.idcurso','=','cursos.id')
+        ->join('gestiones','curso_gestiones.idgestion','=','gestiones.id')
+        >select('inscripciones.id','alumnos.nombre as Nombre Alumno','alumnos.apellidos as Apellidos','curso_gestiones.capacidad as  Capacidad de Alumno','cursos.nombre as  Curso Paralelo','gestiones.año as año Gestion De La Incripcion')
+        ->where('inscripciones.'.$criterio, 'like', '%'. $buscar . '%')
+        ->orderBy('inscripciones.id', 'desc')->paginate(5);
+         }
         return [
             'pagination' => [
                 'total'        => $inscripciones->total(),
@@ -42,40 +47,77 @@ class InscripcionController extends Controller
                 'from'         => $inscripciones->firstItem(),
                 'to'           => $inscripciones->lastItem(),
             ],
-            '$inscripciones' => $inscripciones
+            'inscripciones' => $inscripciones
         ];
     }
+    public function obtenerCabecera(Request $request){
+        if (!$request->ajax()) return redirect('/');
+         $id=$request->id;
+         $gestion = Gestion::select('gestiones.id','gestiones.año as fecha_gestion')
+         ->where('gestiones.id','=',$id)
+         ->orderBy('gestiones.id', 'desc')->take(1)->get();
+         return['gestiones'=>$gestion];
+
+    }
     
-    public function store(Request $request)
-    {
+    public function obtenerDetalle(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $inscripcion = new Inscripcion();
-        $inscripcion->idalumno = $request->idalumno;
-        $inscripcion->idcurso = $request->idcurso;
-        $inscripcion->idgestion = $request->idgestion;
-        $inscripcion->condicion = '1';
-        $inscripcion->save();
+        $id=$request->id;
+        $detalle = CursoGestion::join('cursos','curso_gestiones.idcurso','=','cursos.id')
+        ->select('curso_gestiones.capacidad','cursos.nombre','cursos.dimension')
+        ->where('curso_gestiones.idgestion','=',$id)
+        ->orderBy('curso_gestiones.id','desc')->get();
+         return['detalles'=>$detalle];
     }
-    public function update(Request $request)
-    {
+    public function obtenerAlumno(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $inscripcion = Inscripcione::findOrFail($request->id);
-        $inscripcion->idalumno = $request->idalumno;
-        $inscripcion->idcurso = $request->idcurso;
-        $inscripcion->idgestion = $request->idgestion;
-
-        $inscripcion->condicion = '1';
-        $inscripcion->save();
+        $id=$request->id;
+        $gestion = Alumno::select('alumno.id','alumno.nombre  as Nombre Alumno')
+        ->where('alumno.id','=',$id)
+        ->orderBy('alumno.id', 'desc')->take(1)->get();
+        return['alumno'=>$gestion];
     }
-
-  
-
-    public function activar(Request $request)
-    {
+    public function store(Request $request){
         if (!$request->ajax()) return redirect('/');
-        $inscripcion = Inscripcione::findOrFail($request->id);
-        $inscripcion->condicion = '1';
-        $inscripcion->save();
+        try{
+            DB::beginTransaction();
+            $mytime=Carbon::now('america/Lima');
+            $gestion =new Gestion();
+            $gestion->año=$mytime->toDateString();
+            $gestion->condicion='1';
+            $gestion->save();
+
+            DB::beginTransaction();
+            $mytime=Carbon::now('america/Lima');
+            $alumno =new Alumno();
+            $alumno->capacidad=$det['id'];
+            $alumno->capacidad=$det['nombre'];
+            $alumno->capacidad=$det['apellidos'];
+            $alumno->condicion='1';
+            $alumno->save();
+
+            $detalles=$request->data;
+            foreach($detalles as $ep=>$det){
+            $detalle=new CursoGestion();
+            $detalle->idgestion=$gestion->id;
+            $detalle->idcurso=$det['idcurso'];
+            $detalle->capacidad=$det['capacidad'];
+            $detalle->save();
+
+
+            }  
+            DB::commit();
+        }catch(Exception $e)
+        {
+            DB::rollBack();
+        }
     }
+    public function desactivar(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $gestion = Gestion::findOrFail($request->id);
+        $gestion->condicion = '0';
+        $gestion->save();
+    }
+
 
 }

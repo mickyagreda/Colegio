@@ -242,7 +242,7 @@
                 axios.post('/curso/registrar',{
                     'nombre': this.nombre,
                     'dimension': this.dimension,
-                    'idParalelo': this.idParalelo,
+                    'idParalelo': this.idParalelo
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarCurso(1,'','nombre');
@@ -256,7 +256,7 @@
                     'nombre': this.nombre,
                     'dimension': this.dimension,
                     'idParalelo': this.idParalelo,
-                    'id': this.curso_id,
+                    'id': this.curso_id
                 }).then(function (response) {
                    me.cerrarModal();
                    me.listarCurso(1,'','nombre');
@@ -387,8 +387,8 @@
                                 this.tipoAccion=2;
                                 this.curso_id = data['id'];
                                 this.nombre = data['nombre'];
-                                this.dimension=data['dimension'];
-                                this.idParalelo=data['idParalelo'];
+                                this.dimension= data['dimension'];
+                                this.idParalelo= data['idParalelo'];
                                 
                                 break;
                             }

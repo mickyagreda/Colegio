@@ -159,7 +159,6 @@
                 nombre : '',
                 apellidos : '',
                 telefono : '',
-                
                 ci : '',
                 arrayAlumno : [],
                 modal : 0,
@@ -229,6 +228,8 @@
                 //Envia la petición para visualizar la data de esa página
                 me.listarAlumno(page,buscar,criterio);
             },
+
+            
             registrarAlumno(){
                 if (this.validarAlumno()){
                     return;

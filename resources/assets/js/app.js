@@ -36,6 +36,8 @@ Vue.component('alumno',require('./components/Alumno.vue').default);
 Vue.component('bimestre',require('./components/Bimestre.vue').default);
 Vue.component('paralelo',require('./components/Paralelo.vue').default);
 Vue.component('inscripcion',require('./components/Inscripcion.vue').default);
+Vue.component('materia',require('./components/Materia.vue').default);
+Vue.component('registrarmateria',require('./components/Inscripcion.vue').default);
 const app = new Vue({
     el: '#app',
     data :{

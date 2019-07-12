@@ -69,18 +69,29 @@ Route::put('/bimestre/actualizar','BimestreController@update');
 Route::put('/bimestre/desactivar','BimestreController@desactivar');
 Route::put('/bimestre/activar','BimestreController@activar');
 
-Route::get('/paralelo ', 'ParaleloController@index');
+Route::get('/paralelo', 'ParaleloController@index');
 Route::post('/paralelo/registrar','ParaleloController@store');
-Route::put('/paralelo /actualizar','ParaleloController@update');
-Route::put('/paralelo /desactivar','ParaleloController@desactivar');
-Route::put('/paralelo /activar','ParaleloController@activar');
+Route::put('/paralelo/actualizar','ParaleloController@update');
+Route::put('/paralelo/desactivar','ParaleloController@desactivar');
+Route::put('/paralelo/activar','ParaleloController@activar');
 Route::get('/paralelo/selectParalelo','ParaleloController@selectParalelo');
 
-Route::get('/inscripcion', 'InscripcionController@index');
-Route::post('/inscripcion/registrar', 'InscripcionController@store');
-Route::put('/inscripcion/desactivar', 'InscripcionController@desactivar');
-Route::get('/inscripcion/obtenerCabecera', 'InscripcionController@obtenerCabecera');
-Route::get('/inscripcion/obtenerDetalles', 'InscripcionController@obtenerDetalle');
+Route::get('/inscripcion', 'AlumnoController@index');
+Route::post('/inscripcion/registrar', 'AlumnoController@store');
+Route::put('/inscripcion/desactivar', 'AlumnoController@desactivar');
+Route::get('/inscripcion/obtenerCabecera', 'AlumnoController@obtenerCabecera');
+Route::get('/inscripcion/obtenerCabecera', 'AlumnoController@obtenerAlumno');
+Route::get('/inscripcion/obtenerDetalles', 'AlumnoController@obtenerDetalle');
+
+Route::get('/materia', 'MateriaController@index');
+Route::post('/materia/registrar','MateriaController@store');
+Route::put('/materia/actualizar','MateriaController@update');
+Route::put('/materia/desactivar','MateriaController@desactivar');
+Route::put('/materia/activar','MateriaController@activar');
+
+Route::get('/gestionMaterias', 'CursoGestionController@mostrarCursosDadoGestion');
+Route::get('/gestionMaterias/buscarCursoGestion', 'MateriaController@buscarCursoGestion');
+Route::get('/gestionMaterias/listarCursoGestion', 'MateriaController@listarMateriaGestion');
 
 });
 // Auth::routes();

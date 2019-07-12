@@ -8,8 +8,8 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Paralelos
-                        <button type="button" @click="abrirModal('paralelo','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Materia
+                        <button type="button" @click="abrirModal('materia','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -18,10 +18,10 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="seccion">Seccion</option>
+                                      <option value="nombre">nombreMateria</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarParalelo(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarParalelo(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarMateria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarMateria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -29,31 +29,31 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    <th>Seccion</th>
+                                    <th>nombre</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="paralelo in arrayParalelo" :key="paralelo.id">
+                                <tr v-for="materia in arrayMateria" :key="materia.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('paralelo','actualizar',paralelo)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('materia','actualizar',materia)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="paralelo.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarParalelo(paralelo.id)">
+                                        <template v-if="materia.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarMateria(materia.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarParalelo(paralelo.id)">
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarMateria(materia.id)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
                                     </td>
-                                    <td v-text="paralelo.seccion"></td>
+                                    <td v-text="materia.nombre"></td>
                                 
                                     <td>
-                                        <div v-if="paralelo.condicion">
+                                        <div v-if="materia.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
@@ -94,16 +94,16 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">nombre Paralelo</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">nombre Materia</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" v-model="seccion" class="form-control" placeholder="">
+                                                    <input type="text" v-model="nombre" class="form-control" placeholder="">
                                                 </div>
                                                 
                                 </div>
                              
-                                <div v-show="errorParalelo" class="form-group row div-error">
+                                <div v-show="errorMateria" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjParalelo" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjMateria" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -113,8 +113,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarParalelo()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarParalelo()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarMateria()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarMateria()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -129,14 +129,14 @@
     export default {
         data (){
             return {
-                paralelo_id: 0,
-                seccion :'',
-                arrayParalelo: [],
+                materia_id: 0,
+                nombre :'',
+                arrayMateria: [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorParalelo: 0,
-                errorMostrarMsjParalelo: [],
+                errorMateria: 0,
+                errorMostrarMsjMateria: [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -146,7 +146,7 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'paralelo',
+                criterio : 'nombre',
                 buscar : ''
             }
         },
@@ -180,12 +180,12 @@
             }
         },
         methods : {
-            listarParalelo (page,buscar,criterio){
+            listarMateria (page,buscar,criterio){
                 let me=this;
-                var url= '/paralelo?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/materia?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    me.arrayParalelo = respuesta.paralelos.data;
+                    me.arrayMateria = respuesta.materias.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -197,45 +197,44 @@
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envia la petición para visualizar la data de esa página
-                me.listarParalelo(page,buscar,criterio);
+                me.listarMateria(page,buscar,criterio);
             },
-            registrarParalelo(){
-                if (this.validarParalelo()){
+            registrarMateria(){
+                if (this.validarMateria()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/paralelo/registrar',{
-                    'seccion': this.seccion,
-                   
+                axios.post('/materia/registrar',{
+                    'nombre': this.nombre
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarParalelo(1,'','seccion');
+                    me.listarMateria(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarParalelo(){
-               if (this.validarParalelo()){
+            actualizarMateria(){
+               if (this.validarMateria()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.put('/paralelo/actualizar',{
-                    'seccion': this.seccion,
-                    'id': this.paralelo_id
+                axios.put('/materia/actualizar',{
+                    'nombre': this.nombre,
+                    'id': this.materia_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarParalelo(1,'','seccion');
+                    me.listarMateria(1,'','materia');
                 }).catch(function (error) {
                     console.log(error);
                 }); 
             },
-            desactivarParalelo(id){
+            desactivarMateria(id){
                swal({
-                title: 'Esta seguro de desactivar este Paralelo?',
+                title: 'Esta seguro de desactivar esta Materia?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -250,13 +249,13 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/paralelo/desactivar',{
+                    axios.put('/materia/desactivar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarParalelo(1,'','seccion');
+                        me.listarMateria(1,'','nombre');
                         swal(
                         'Desactivado!',
-                        'El paralelo ha sido desactivado con éxito.',
+                        'La materia ha sido desactivado con éxito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -272,9 +271,9 @@
                 }
                 }) 
             },
-            activarParalelo(id){
+            activarMateria(id){
                swal({
-                title: 'Esta seguro de activar este paralelo?',
+                title: 'Esta seguro de activar esta materia?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -289,13 +288,13 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/paralelo/activar',{
+                    axios.put('/materia/activar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarParalelo(1,'','seccion');
+                        me.listarMateria(1,'','nombre');
                         swal(
                         'Activado!',
-                        'El paralelo ha sido activado con éxito.',
+                        'La materia ha sido activado con éxito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -311,32 +310,32 @@
                 }
                 }) 
             },
-             validarParalelo(){
-                this.errorParalelo=0;
-                this.errorMostrarMsjParalelo =[];
+             validarMateria(){
+                this.errorMateria=0;
+                this.errorMostrarMsjMateria =[];
 
-                if (!this.seccion ) this.errorMostrarMsjParalelo.push("El nombre del la seccion no puede estar vacío.");
+                if (!this.nombre ) this.errorMostrarMsjMateria.push("El nombre del la materia no puede estar vacío.");
 
-                if (this.errorMostrarMsjParalelo.length) this.errorParalelo = 1;
+                if (this.errorMostrarMsjMateria.length) this.errorMateria = 1;
 
-                return this.errorParalelo;
+                return this.errorMateria;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.seccion='';
+                this.nombre='';
             
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "paralelo":
+                    case "materia":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Paralelo';
-                                this.seccion= '';
+                                this.tituloModal = 'Registrar materia';
+                                this.nombre= '';
                                 
                                 this.tipoAccion = 1;
                                 break;
@@ -345,10 +344,10 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar paralelo';
+                                this.tituloModal='Actualizar Materia';
                                 this.tipoAccion=2;
-                                this.paralelo_id= data['id'];
-                                this.seccion = data['seccion'];
+                                this.materia_id=data['id'];
+                                this.nombre = data['nombre'];
                              
                                 break;
                             }
@@ -358,7 +357,7 @@
             }
         },
         mounted() {
-            this.listarParalelo(1,this.buscar,this.criterio);
+            this.listarMateria(1,this.buscar,this.criterio);
         }
     }
 </script>

@@ -1,19 +1,19 @@
     @extends('principal')
     @section('contenido')
-        <template v-if="menu==0">
-        <h1>Contenido del menú 0</h1>
+        <template v-if="menu==0"> 
+            <MARQUEE BEHAVIOR=ALTERNATE><h1>Bienvenido Al Control Del Colegio</h1></MARQUEE>
         </template>
 
         <template v-if="menu==1">
-            <categoria></categoria>
+            <profesor></profesor>
         </template>
 
         <template v-if="menu==2">
-            <articulo></articulo>
+            <alumno></alumno>
         </template>
 
         <template v-if="menu==3">
-            <profesor></profesor>
+           <curso></curso>
         </template>
 
         <template v-if="menu==4">
@@ -21,37 +21,34 @@
         </template>
 
         <template v-if="menu==5">
-           <curso></curso>           
-        </template>
-        <template v-if="menu==6">
-           <alumno><alumno/>
+            <calificasion></calificasion>
         </template>
 
         <template v-if="menu==7">
-            <bimestre></bimestre>
+            <alumno></alumno>
         </template>
 
         <template v-if="menu==8">
-            <paralelo></paralelo>
+            <materia></materia>
         </template>
 
         <template v-if="menu==9">
-           <inscripcion></inscripcion>
+           <bimestre></bimestre>
         </template>
 
         <template v-if="menu==10">
-            <h1>Contenido del menú 10</h1>
+            <inscripcion></inscripcion>
         </template>
 
         <template v-if="menu==11">
-            <h1>Contenido del menú 11</h1>
+            <materia></materia>
         </template>
 
         <template v-if="menu==12">
-            <h1>Contenido del menú 12</h1>
+            <registrarmateria></registrarmateria>
         </template>
         <template v-if="menu==13">
-            <h1>Contenido del menú 13</h1>
+            <paralelo></paralelo>
         </template>
         
     @endsection

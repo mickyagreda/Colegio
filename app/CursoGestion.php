@@ -15,4 +15,8 @@ class CursoGestion extends Model
     public function Gestion(){
         return $this->belongsTo('App\Gestion');
     }
+    // public function cursoGestion()
+    // {
+    //     return $this->belongsto('App\Inscripcion');
+    // }
 }

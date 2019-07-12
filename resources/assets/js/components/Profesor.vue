@@ -32,14 +32,14 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>apellido</th>
-                                    <th>fechaNacimiento</th>
-                                    <th>direccion</th>
+                                    <th>Apellido</th>
+                                    <th>FechaNacimiento</th>
+                                    <th>Direccion</th>
                                     <th>DNI</th>
-                                    <th>telefono</th>
-                                    <th>profesion</th>
-                                    <th>imagen</th>
-                                    <th>estado</th>
+                                    <th>Telefono</th>
+                                    <th>Profesion</th>
+                                    <th>Estado</th>
+                                    <th>Foto Perfil</th>
                                   
                                 </tr>
                             </thead>
@@ -49,7 +49,16 @@
                                         <button type="button" @click="abrirModal('profesor','actualizar',profesor)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button>
-                                        
+                                         <template v-if="profesor.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarProfesor(profesor.id)">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarProfesor(profesor.id)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
                                     </td> 
                                     <td v-text="profesor.nombre"></td>
                                     <td v-text="profesor.apellido"></td>
@@ -58,7 +67,6 @@
                                     <td v-text="profesor.DNI"></td>
                                     <td v-text="profesor.telefono"></td>
                                     <td v-text="profesor.profesion"></td>
-                                       
                                        <td>
                                         <div v-if="profesor.condicion">
                                             <span class="badge badge-success">Activo</span>
@@ -68,7 +76,7 @@
                                         </div>
                                         
                                     </td>
-                                    
+
                                     <td>
                                         <img v-bind:src="`img/imagenes/profesor/${profesor.imagen}`" width="70px" height="70px">
                                     </td>
@@ -337,9 +345,9 @@
                     console.log(error);
                 });
             },
-             desactivarCurso(id){
+             desactivarProfesor(id){
                swal({
-                title: 'Esta seguro de inactivo este Profesor?',
+                title: 'Esta seguro de desactivar este Profesor?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -357,7 +365,7 @@
                     axios.put('/profesor/desactivar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarCurso(1,'','nombre');
+                        me.listarProfesor(1,'','nombre');
                         swal(
                         'Desactivado!',
                         'El registro ha sido desactivado con éxito.',
@@ -376,7 +384,7 @@
                 }
                 }) 
             },
-            activarCurso(id){
+            activarProfesor(id){
                swal({
                 title: 'Esta seguro de activar este Profesor?',
                 type: 'warning',
@@ -396,7 +404,7 @@
                     axios.put('/profesor/activar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarCurso(1,'','nombre');
+                        me.listarProfesor(1,'','nombre');
                         swal(
                         'Activado!',
                         'El registro ha sido activado con éxito.',

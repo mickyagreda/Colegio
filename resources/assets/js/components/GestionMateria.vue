@@ -8,16 +8,12 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Gestion
-                        <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Cursos Dado la gestion
+                        <button type="button"  @click="mostrarDetalle()"  class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
-                        <br></br>
-                                Buscar Alumnos:: <input type="text" name="txtbuscar">
-                                <input type="submit" name="btnbuscar" value="buscar">
-
                     </div>
-                    <!-- Listado-->
+                    <!-- Listado1-->
                     <template v-if="listado==1">
                     <div class="card-body">
                         <div class="form-group row">
@@ -26,8 +22,8 @@
                                     <select class="form-control col-md-3" v-model="criterio">
                                       <option value="año">Fecha</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarGestion(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarGestion(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listaMaterias(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listaMaterias(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -36,32 +32,28 @@
                                 <thead>
                                     <tr>
                                         <th>Opciones</th>
-                                        <th>Año</th>
-                                        <th>Estado</th>
+                                        <th>CodigoCurso</th>
+                                         <th>CodigoGestion</th>
+                                          <th>NombreCurso</th>
+                                           <th>Seccion</th>
+                                            <th>Capacidad</th>
+                                         
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="gestion in arrayGestion" :key="gestion.id">
+                                    <tr v-for="gestionCurso in arrayGestionCurso" :key="gestionCurso.id">
                                         <td>
-                                            <button type="button"  @click="verGestion(gestion.id)" class="btn btn-success btn-sm">
-                                            <i class="icon-eye"></i>
+                                            <button type="button" @click="mostrarDetalle()" class="btn btn-success btn-sm">
+                                            <i class="icon-eye"></i><!-- para ver los detalles y materias por curso-->
                                             </button> &nbsp;
-                                            <template v-if="gestion.condicion">
-                                                <button type="button" class="btn btn-danger btn-sm" @click="desactivarGestion(gestion.id)">
-                                                    <i class="icon-trash"></i>
-                                                </button>
-                                            </template>
+                                          
                                         </td>
-                                        <td v-text="gestion.año"></td>
-                                        <td>
-                                            <div v-if="gestion.condicion">
-                                                <span class="badge badge-success">gestion en macha</span>
-                                            </div>
-                                            <div v-else>
-                                                <span class="badge badge-danger">gestion finaliza</span>
-                                            </div>
-                                        
-                                        </td>
+                                        <td v-text="gestionCurso.id"></td>
+                                        <td v-text="gestionCurso.idgestion"></td>
+                                        <td v-text="gestionCurso.nombre"></td>
+                                        <td v-text="gestionCurso.seccion"></td>
+                                        <td v-text="gestionCurso.capacidad"></td>
+                                       
                                     </tr>                                
                                 </tbody>
                             </table>
@@ -89,9 +81,9 @@
                         <div class="form-group row border">
                     
                             <div class="col-md-12">
-                                <div v-show="errorGestion" class="form-group row div-error">
+                                <div v-show="errorGestionCurso" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjGestion" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjGestionCurso" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -101,30 +93,18 @@
                         <div class="form-group row border">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Curso <span style="color:red;" v-show="idcurso==0">(*Seleccione)</span></label>
+                                    <label>Materia <span style="color:red;" v-show="idmateria==0">(*Seleccione)</span></label>
                                     <div class="form-inline">
-                                        <input type="text" class="form-control" v-model="curso" @keyup.enter="buscarCurso()" placeholder="Ingrese Curso">
+                                        <input type="text" class="form-control" v-model="materia" @keyup.enter="buscarMateria()" placeholder="Ingrese Materia">
                                         <button @click="abrirModal()" class="btn btn-primary">...</button>
-                                        <input type="text"  class="form-control" v-model="idcurso">
+                                        <input type="text"  class="form-control" v-model="idmateria">
                                     </div>                                    
                                 </div>
                             </div>
                              <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>dimension<span style="color:red;" v-show="dimension"></span></label>
-                                    <input type="text"   class="form-control" v-model="dimension">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>paralelo<span style="color:red;" v-show="nombreParalelo"></span></label>
-                                    <input type="text"  step="any" class="form-control" v-model="nombreParalelo">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Capacidad de Alumnos<span style="color:red;" v-show="capacidad==0">(*Ingrese)</span></label>
-                                    <input type="number" value="0" step="any" class="form-control" v-model="capacidad">
+                                    <label>turno<span style="color:red;" v-show="turno==''"></span></label>
+                                    <input type="text"  value="" class="form-control" v-model="turno">
                                 </div>
                             </div>
           
@@ -143,10 +123,8 @@
                                     <thead>
                                         <tr>
                                             <th>Opciones</th>
-                                            <th>curso</th>
-                                            <th>Capacidad</th>
-                                            <th>Dimension</th>
-                                            <th>Paralelo</th>
+                                            <th>nombreMateria</th>
+                                            <th>turno</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
@@ -156,13 +134,11 @@
                                                     <i class="icon-close"></i>
                                                 </button>
                                             </td>
-                                            <td v-text="detalle.curso">
+                                            <td v-text="detalle.materia">
                                             </td>
                                             <td>
-                                                <input v-model="detalle.capacidad" type="number" value="2" class="form-control">
+                                                <input v-model="detalle.turno" type="text" value="" class="form-control">
                                             </td>
-                                            <td v-text="detalle.dimension"></td>
-                                            <td v-text="detalle.paralelo"></td>
                                             
                                         </tr>
                                     </tbody>
@@ -181,7 +157,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                                <button type="button" class="btn btn-primary" @click="registrarGestion()">Registrar Compra</button>
+                                <button type="button" class="btn btn-primary" @click="registrarGestionMateria()">Registrar Materias</button>
                             </div>
                         </div>
                     </div>
@@ -205,19 +181,17 @@
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                         <tr>
-                                            <th>Curso</th>
-                                            <th>Capacidad</th>
-                                            <th>Dimension</th>
+                                            <th>nombreMateria</th>
+                                            <th>turno</th>  
                                         </tr>
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
                                         <tr v-for="detalle in arrayDetalle" :key="detalle.id">
                                             <td v-text="detalle.nombre">
                                             </td>
-                                            <td v-text="detalle.capacidad">
+                                            <td v-text="detalle.turno">
                                             </td>
-                                             <td v-text="detalle.dimension">
-                                            </td>
+                                            
                                         </tr>
                                       <!--<tr style="background-color: #CEECF5;">//este codigo falta implementar en la base datos totalCuposHabilitados
                                             <td colspan="3" align="right"><strong>Total Cupos Habilitado:</strong></td>
@@ -266,11 +240,9 @@
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterioA">
                                         <option value="nombre">Nombre</option>
-                                        <option value="dimension">dimension</option>
-                                         <option value="seccion">seccion</option>
                                         </select>
-                                        <input type="text" v-model="buscarA" @keyup.enter="listarCurso(1,buscarA,criterioA)" class="form-control" placeholder="Texto a buscar">
-                                        <button type="submit" @click="listarCurso(1,buscarA,criterioA)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                        <input type="text" v-model="buscarA" @keyup.enter="listarMaterias2(1,buscarA,criterioA)" class="form-control" placeholder="Texto a buscar">
+                                        <button type="submit" @click="listarMaterias2(1,buscarA,criterioA)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -283,23 +255,22 @@
                                         <tr>
                                             <th>Opciones</th>
                                             <th>Nombre</th>
-                                            <th>Dimension</th>
-                                            <th>Paralelo</th>
-                                            <th>Estado</th>
+        
+                                            <th>Condicion</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="curso in arrayCurso" :key="curso.id">
+                                        <tr v-for="materia in arrayMateria" :key="materia.id">
                                             <td>
-                                                <button type="button" @click="agregarDetalleModal(curso)" class="btn btn-success btn-sm">
+                                                <button type="button" @click="agregarDetalleModal(materia)" class="btn btn-success btn-sm">
                                                 <i class="icon-check"></i>
                                                 </button>
                                             </td>
-                                            <td v-text="curso.nombre"></td>
-                                            <td v-text="curso.dimension"></td>
-                                            <td v-text="curso.nombre_paralelo"></td>
+                                            <td v-text="materia.nombre"></td>
+                                           
                                             <td>
-                                                <div v-if="curso.condicion">
+                                                <div v-if="materia.condicion">
                                                     <span class="badge badge-success">Activo</span>
                                                 </div>
                                                 <div v-else>
@@ -346,9 +317,9 @@
  export default {
         data (){
             return {
-                gestion_id: 0,
+                gestionCurso_id: 0,
                 año:'',
-                arrayGestion : [],
+                arrayGestionCurso : [],
                 arrayDetalle : [],
                 listado:1,
                 modal : 0,
@@ -369,12 +340,13 @@
                 buscar : '',
                 criterioA:'nombre',
                 buscarA: '',
-                arrayCurso: [],
-                idcurso: 0,
+                arrayMateria: [],
+                idmateria: 0,
                 curso: '',//nombre del curso
                 dimension:'',
                 nombreParalelo:'', //nombre de paralelo
                 capacidad:0,
+                id_curso:'',
           
             }
         },
@@ -414,12 +386,12 @@
             }
         },
         methods : {
-            listarGestion(page,buscar,criterio){
+            listaMaterias(page,buscar,criterio){
                 let me=this;
-                var url= '/gestion?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/gestionMaterias?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    me.arrayGestion = respuesta.gestiones.data;
+                    me.arrayGestionCurso = respuesta.curso_gestion.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -431,25 +403,22 @@
                 me.loading = true;
                 me.idproveedor = val1.id;
             },
-
-            
-            buscarCurso(){
+            buscarMateria(){
                 let me=this;
-                var url= '/curso/buscarCursoGestion?filtro=' + me.curso;
+                var url= '/materia/buscarMateriaGestion?filtro=' + me.materia;
 
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    me.arrayCurso = respuesta.cursos;
+                    me.arrayMateria = respuesta.materias;
 
-                    if (me.arrayCurso.length>0){
-                        me.curso=me.arrayCurso[0]['nombre'];
-                        me.dimension=me.arrayCurso[0]['dimension'];
-                        me.idcurso=me.arrayCurso[0]['id'];
-                        me.nombreParalelo=me.arrayCurso[0]['nombre_paralelo'];
+                    if (me.arrayMateria.length>0){
+                        me.materia=me.arrayMateria[0]['nombre'];
+                        me.turno=me.arrayMateria[0]['turno'];
+                        me.idmateria=me.arrayMateria[0]['id'];
                     }
                     else{
-                        me.curso='No existe curso ';
-                        me.idcurso=0;
+                        me.curso='No existe materia ';
+                        me.idmateria=0;
                     }
                 })
                 .catch(function (error) {
@@ -474,7 +443,7 @@
             encuentra(id){
                 var sw=0;
                 for(var i=0;i<this.arrayDetalle.length;i++){
-                    if(this.arrayDetalle[i].idcurso==id){
+                    if(this.arrayDetalle[i].idmateria==id){
                         sw=true;
                     }
                 }
@@ -486,45 +455,28 @@
             },
             agregarDetalle(){//se agrega registro solo a los campos de encabezado
                 let me=this;
-                if(me.idcurso==0 || me.capacidad==0 ){
+                if(me.idmateria==0 || me.turno==''){
                 }
                 else{
-                    if(me.encuentra(me.idcurso)){
+                    if(me.encuentra(me.idmateria)){
                         swal({
                             type: 'error',
                             title: 'Error...',
-                            text: 'Ese cursos ya se encuentra agregado!',
+                            text: 'la materia ya se encuentra agregado o verificar el turno!',
                             })
                     }
                     else{
-                       if(me.capacidad>40){
-                            swal({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'maximo de capacidad 40 !',
-                            })
-                       }else{
                              me.arrayDetalle.push({
-                                 idcurso:me.idcurso,
-                                 curso:me.curso,
-                                 capacidad:me.capacidad,
-                                 dimension:me.dimension,
-                                 paralelo:me.nombreParalelo
-                                 
+                                 idmateria:me.idmateria,
+                                 materia:me.materia
                              });
-                             me.curso='';
-                             me.capacidad=0;
-                             me.idcurso=0;
-                             me.dimension='';
-                             me.nombreParalelo='';
-                           
-
+                             me.materia='';
+                             me.turno='';
+                             me.idmateria=0;
                        }
                     }
                     
-                }
-
-                
+                }    
 
             },
             agregarDetalleModal(data =[]){
@@ -538,26 +490,19 @@
                     }
                     else{
                        me.arrayDetalle.push({
-                            idcurso: data['id'],
-                            curso: data['nombre'],
-                            dimension:data['dimension'],
-                            capacidad:1,
-                            paralelo:data['nombre_paralelo']
-
-                           // capacidad: 1,        
+                            idmateria: data['id'],
+                            materia: data['nombre'],
+                            turno:'Mañana'
+                            
                         }); 
-
-
-
-
                     }
             },
-            listarCurso (page,buscar,criterioA){
+            listarMaterias2 (page,buscar,criterioA){
                 let me=this;
-                var url= '/curso/listarCursoGestion?page='+page+'&buscar='+ buscar + '&criterio='+ criterioA;
+                var url= '/curso/listarMateriasGestion?page='+page+'&buscar='+ buscar + '&criterio='+ criterioA;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    me.arrayCurso = respuesta.cursos.data;
+                    me.arrayMateria = respuesta.materias.data;
                     me.pagination= respuesta.pagination
                 })
                 .catch(function (error) {
@@ -593,8 +538,8 @@
                 me.errorMostrarMsjGestion =[];
                 var art;
                 me.arrayDetalle.map(function(x){
-                    if(x.capacidad>40){
-                        art=x.curso+'  cantidad a exedido de limite 40 alumnos por curso segun articulo 9 de ley educacion nacional';
+                    if(x.turno==''){
+                        art=x.materia+' el campo turno es obligatorio educacion nacional';
                         me.errorMostrarMsjGestion.push(art);
                     }
                 });
@@ -604,14 +549,32 @@
 
                 return this.errorGestion;
             },
-            mostrarDetalle(){
+             mostrarDetalle(){
                 let me=this;
                 me.listado=0;
-                me.idcurso=0;
-                me.curso='';
+                me.idmateria=0;
+              //  me.materia='';
                 me.capacidad=0;
                 me.arrayDetalle=[];
             },
+           // mostrarDetalle(){
+                // let me=this;
+                // me.listado=0;
+                // me.idmateria=0;
+                // me.gestionCurso_id=$idCursoGestion;
+                // me.materia='';
+                // me.turno=0;
+                // me.arrayDetalle=[];
+
+                // let me=this;
+                // me.listado=0;
+                // me.idcurso=0;
+                // me.curso='';
+                // me.capacidad=0;
+                // me.arrayDetalle=[];
+            //},
+
+             
             ocultarDetalle(){
                 this.listado=1;
             },
@@ -652,7 +615,7 @@
             abrirModal(){               
                 this.arrayCurso=[];
                 this.modal = 1;
-                this.tituloModal = 'Seleccione uno o varios cursos';
+                this.tituloModal = 'Seleccione uno o varios Materias';
             },
             desactivarGestion(id){
                swal({
@@ -693,12 +656,10 @@
                 }
                 }) 
             },
-        },
         mounted() {
-            this.listarGestion(1,this.buscar,this.criterio);
-            this.listarCurso(1,this.buscar,this.criterioA);
+          this.listaMaterias(1,this.buscar,this.criterio);
+          this.listarMaterias2 (1,this.buscar,this.criterioA);
         }
-        
     }
 </script>
 <style>    
